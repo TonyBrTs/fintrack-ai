@@ -37,10 +37,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <Header />
-          <div className="h-0.5 bg-gray-300 w-full" />
+          <div className="md:h-0.5 bg-gray-300 w-full h-0.15" />
           <SubNavbar />
-          <div className="h-0.5 bg-gray-300 w-full" />
-          <main className="w-full max-w-360 mx-auto px-4 md:px-10 lg:px-20">
+          <div className="md:h-0.5 bg-gray-300 w-full hidden" />
+          <main className="w-full max-w-360 mx-auto px-4 md:px-10 lg:px-20 pb-24 md:pb-0">
             {children}
           </main>
         </ThemeProvider>
