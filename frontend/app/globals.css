@@ -22,6 +22,8 @@ body {
   --color-titles: #111827;
   --color-bg-page: #eaeaea;
   --color-secondary-titles: #6b7280;
+  --color-card-bg: var(--card);
+  --color-border-ui: var(--border);
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);

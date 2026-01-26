@@ -12,7 +12,7 @@ interface SettingsContextType {
   setLanguage: (lang: Language) => void;
   setCurrency: (curr: Currency) => void;
   currencySymbol: string;
-  t: (path: string) => string;
+  translate: (path: string) => string;
 }
 
 const SettingsContext = createContext<SettingsContextType | undefined>(
@@ -60,7 +60,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [currency]);
 
-  const t = (path: string): string => {
+  const translate = (path: string): string => {
     const keys = path.split(".");
     let result: unknown = translations[language];
     for (const key of keys) {
@@ -79,7 +79,7 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({
     setLanguage,
     setCurrency,
     currencySymbol: currencySymbols[currency],
-    t,
+    translate,
   };
 
   return (

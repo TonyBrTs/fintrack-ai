@@ -14,22 +14,30 @@ import { useSettings } from "@/contexts/SettingsContext";
 
 export function SubNavbar() {
   const pathname = usePathname();
-  const { t } = useSettings();
+  const { translate } = useSettings();
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
 
   const navItems = [
-    { name: t("nav.summary"), href: "/", icon: <LayoutDashboard size={20} /> },
     {
-      name: t("nav.expenses"),
+      name: translate("nav.summary"),
+      href: "/",
+      icon: <LayoutDashboard size={20} />,
+    },
+    {
+      name: translate("nav.expenses"),
       href: "/gastos",
       icon: <TrendingDown size={20} />,
     },
     {
-      name: t("nav.income"),
+      name: translate("nav.income"),
       href: "/ingresos",
       icon: <TrendingUp size={20} />,
     },
-    { name: t("nav.goals"), href: "/metas", icon: <Target size={20} /> },
+    {
+      name: translate("nav.goals"),
+      href: "/metas",
+      icon: <Target size={20} />,
+    },
   ];
 
   return (

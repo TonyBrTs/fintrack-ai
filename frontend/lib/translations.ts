@@ -24,6 +24,15 @@ export const translations = {
     expenses: {
       title: "Expenses",
       description: "Recording and analysis of your expenses.",
+      register: "Register Expense",
+      totalMonth: "Total Monthly Expense",
+      highestCategory: "Highest Category",
+      table: {
+        date: "Date",
+        description: "Description",
+        category: "Category",
+        amount: "Amount",
+      },
     },
     goals: {
       title: "Goals",
@@ -55,6 +64,15 @@ export const translations = {
     expenses: {
       title: "Gastos",
       description: "Gestión de tus gastos detallados.",
+      register: "Registrar Gasto",
+      totalMonth: "Gasto Total del Mes",
+      highestCategory: "Categoría más alta",
+      table: {
+        date: "Fecha",
+        description: "Descripción",
+        category: "Categoría",
+        amount: "Monto",
+      },
     },
     goals: {
       title: "Metas",

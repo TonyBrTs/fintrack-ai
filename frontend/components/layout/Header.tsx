@@ -18,7 +18,8 @@ import {
 
 export function Header() {
   const { theme, setTheme } = useTheme();
-  const { language, setLanguage, currency, setCurrency, t } = useSettings();
+  const { language, setLanguage, currency, setCurrency, translate } =
+    useSettings();
   const [mounted, setMounted] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -61,7 +62,9 @@ export function Header() {
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end">
-              <DropdownMenuLabel>{t("header.language")}</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                {translate("header.language")}
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem onClick={() => setLanguage("en")}>
@@ -74,7 +77,9 @@ export function Header() {
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuLabel>{t("header.currency")}</DropdownMenuLabel>
+              <DropdownMenuLabel>
+                {translate("header.currency")}
+              </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 <DropdownMenuItem onClick={() => setCurrency("USD")}>
@@ -124,7 +129,7 @@ export function Header() {
       <Sheet
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
-        title={t("header.settings") || "Settings"}
+        title={translate("header.settings") || "Settings"}
       >
         <div className="flex flex-col gap-8">
           {/* User Profile Section */}
@@ -174,7 +179,7 @@ export function Header() {
           {/* Language Selection */}
           <div className="space-y-4">
             <h3 className="text-titles dark:text-foreground font-semibold text-sm">
-              {t("header.language")}
+              {translate("header.language")}
             </h3>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -205,7 +210,7 @@ export function Header() {
           {/* Currency Selection */}
           <div className="space-y-4">
             <h3 className="text-titles dark:text-foreground font-semibold text-sm">
-              {t("header.currency")}
+              {translate("header.currency")}
             </h3>
             <div className="grid grid-cols-2 gap-2">
               {["USD", "EUR", "GBP", "CRC"].map((curr) => (

@@ -3,15 +3,15 @@
 import { useSettings } from "@/contexts/SettingsContext";
 
 export default function GoalsPage() {
-  const { t } = useSettings();
+  const { translate } = useSettings();
 
   return (
     <div className="p-8">
       <h1 className="text-titles dark:text-foreground font-bold text-2xl mb-4">
-        {t("goals.title")}
+        {translate("goals.title")}
       </h1>
       <p className="text-secondary-titles dark:text-gray-400">
-        {t("goals.description")}
+        {translate("goals.description")}
       </p>
     </div>
   );
