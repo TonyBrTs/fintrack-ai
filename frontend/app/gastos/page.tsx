@@ -155,6 +155,7 @@ export default function GastosPage() {
         isOpen={isDetailsOpen}
         onClose={() => setIsDetailsOpen(false)}
         expense={selectedExpense}
+        onSuccess={fetchExpenses}
       />
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
@@ -201,7 +202,7 @@ export default function GastosPage() {
                   setSelectedExpense(expense);
                   setIsDetailsOpen(true);
                 }}
-                className="hover:bg-secondary/20 dark:hover:bg-secondary/5 transition-colors border-border-ui h-20 cursor-pointer active:scale-[0.99] transition-all"
+                className="hover:bg-secondary/20 dark:hover:bg-secondary/5 border-border-ui h-20 cursor-pointer active:scale-[0.99] transition-all"
               >
                 <TableCell className="px-4 md:px-6 py-4 text-sm text-titles dark:text-foreground whitespace-nowrap font-medium">
                   <div className="flex flex-col">

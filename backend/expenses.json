@@ -1,11 +1,11 @@
 [
   {
     "id": "1",
-    "amount": 45.5,
-    "currency": "USD",
+    "amount": 51,
+    "currency": "CRC",
     "description": "Almuerzo de negocios",
     "category": "Alimentación",
-    "date": "2026-01-28T13:05:29.639823914-06:00",
+    "date": "2026-01-28T00:00:00Z",
     "payment_method": "Tarjeta de Crédito"
   },
   {

@@ -137,5 +137,55 @@ func main() {
 		c.JSON(http.StatusCreated, newExpense)
 	})
 
+	r.PUT("/api/expenses/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		var updatedExpense models.Expense
+		if err := c.ShouldBindJSON(&updatedExpense); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		found := false
+		for i, e := range expenses {
+			if e.ID == id {
+				updatedExpense.ID = id // Keep the same ID
+				if updatedExpense.Date.IsZero() {
+					updatedExpense.Date = e.Date
+				}
+				expenses[i] = updatedExpense
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Expense not found"})
+			return
+		}
+
+		saveExpenses()
+		c.JSON(http.StatusOK, updatedExpense)
+	})
+
+	r.DELETE("/api/expenses/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		found := false
+		for i, e := range expenses {
+			if e.ID == id {
+				expenses = append(expenses[:i], expenses[i+1:]...)
+				found = true
+				break
+			}
+		}
+
+		if !found {
+			c.JSON(http.StatusNotFound, gin.H{"error": "Expense not found"})
+			return
+		}
+
+		saveExpenses()
+		c.JSON(http.StatusNoContent, nil)
+	})
+
 	r.Run("0.0.0.0:8080")
 }

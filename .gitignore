@@ -20,6 +20,7 @@ frontend/out/
 # production
 frontend/build
 backend/bin
+*/expenses.json
 
 # misc
 .DS_Store
@@ -45,3 +46,4 @@ frontend/next-env.d.ts
 backend/vendor/
 backend/*.exe
 backend/*.test
+backend/expenses.json
