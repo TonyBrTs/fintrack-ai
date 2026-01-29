@@ -31,7 +31,7 @@ export function Sheet({ isOpen, onClose, title, children }: SheetProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 cursor-pointer"
           />
 
           {/* Sheet Content */}
@@ -48,7 +48,7 @@ export function Sheet({ isOpen, onClose, title, children }: SheetProps) {
               </h2>
               <button
                 onClick={onClose}
-                className="text-gray-400 hover:text-action transition-colors"
+                className="text-gray-400 hover:text-action transition-colors cursor-pointer"
               >
                 <X size={24} />
               </button>

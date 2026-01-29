@@ -63,7 +63,17 @@ export default function GastosPage() {
   }, []);
 
   const totalMonth = expenses.reduce((acc, curr) => acc + curr.amount, 0);
-  const highestCategory = expenses.length > 0 ? "Servicios" : "---"; // Simplified logic
+
+  const categoryTotals = expenses.reduce(
+    (acc, curr) => {
+      acc[curr.category] = (acc[curr.category] || 0) + curr.amount;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  const highestCategory =
+    Object.entries(categoryTotals).sort((a, b) => b[1] - a[1])[0]?.[0] || "---";
 
   if (loading && expenses.length === 0) {
     return (
@@ -117,7 +127,7 @@ export default function GastosPage() {
         <motion.button
           whileHover="hover"
           onClick={() => setIsModalOpen(true)}
-          className="group flex items-center gap-2 bg-action hover:bg-action/90 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-md hover:shadow-lg active:scale-95"
+          className="group flex items-center gap-2 bg-action hover:bg-action/90 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-md hover:shadow-lg active:scale-95 cursor-pointer"
         >
           <motion.div
             initial={{ rotate: 0 }}

@@ -134,6 +134,12 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+  button,
+  [role="button"],
+  a,
+  select {
+    cursor: pointer;
+  }
 }
 
 /* Hide number input arrows */

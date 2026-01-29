@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "amount": 45.5,
+    "currency": "USD",
+    "description": "Almuerzo de negocios",
+    "category": "Alimentación",
+    "date": "2026-01-28T13:05:29.639823914-06:00",
+    "payment_method": "Tarjeta de Crédito"
+  },
+  {
+    "id": "2",
+    "amount": 12,
+    "currency": "USD",
+    "description": "Uber al aeropuerto",
+    "category": "Transporte",
+    "date": "2026-01-27T13:05:29.639842483-06:00",
+    "payment_method": "Efectivo"
+  },
+  {
+    "id": "3",
+    "amount": 85,
+    "currency": "USD",
+    "description": "Suscripción Netflix y Spotify",
+    "category": "Entretenimiento",
+    "date": "2026-01-26T13:05:29.63984258-06:00",
+    "payment_method": "Débito"
+  },
+  {
+    "id": "4",
+    "amount": 120,
+    "currency": "USD",
+    "description": "Pago de luz y agua",
+    "category": "Servicios",
+    "date": "2026-01-24T13:05:29.639842678-06:00",
+    "payment_method": "Transferencia"
+  },
+  {
+    "id": "5",
+    "amount": 30,
+    "currency": "USD",
+    "description": "Farmacia",
+    "category": "Salud",
+    "date": "2026-01-23T13:05:29.639842776-06:00",
+    "payment_method": "Tarjeta de Crédito"
+  }
+]
