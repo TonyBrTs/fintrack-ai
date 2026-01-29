@@ -7,6 +7,8 @@ import { Badge } from "@/components/ui/Badge";
 import { useSettings } from "@/contexts/SettingsContext";
 import type { Expense } from "@/types/index";
 import { useState, useEffect } from "react";
+import { RegisterExpenseModal } from "@/components/expenses/RegisterExpenseModal";
+import { ExpenseDetailsSheet } from "@/components/expenses/ExpenseDetailsSheet";
 import {
   Table,
   TableBody,
@@ -33,34 +35,37 @@ export default function GastosPage() {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  const fetchExpenses = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:8080/api/expenses");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch expenses");
+      }
+      const data = await response.json();
+      setExpenses(data);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching expenses:", err);
+      setError("Could not load expenses. Make sure the backend is running.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchExpenses = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch("http://localhost:8080/api/expenses");
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch expenses");
-        }
-        const data = await response.json();
-        setExpenses(data);
-        setError(null);
-      } catch (err) {
-        console.error("Error fetching expenses:", err);
-        setError("Could not load expenses. Make sure the backend is running.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchExpenses();
   }, []);
 
   const totalMonth = expenses.reduce((acc, curr) => acc + curr.amount, 0);
   const highestCategory = expenses.length > 0 ? "Servicios" : "---"; // Simplified logic
 
-  if (loading) {
+  if (loading && expenses.length === 0) {
     return (
       <main className="max-w-360 mx-auto px-4 lg:px-20 py-20 flex flex-col items-center justify-center space-y-4">
         <Loader2 className="w-12 h-12 text-action animate-spin opacity-50" />
@@ -71,7 +76,7 @@ export default function GastosPage() {
     );
   }
 
-  if (error) {
+  if (error && expenses.length === 0) {
     return (
       <main className="max-w-360 mx-auto px-4 lg:px-20 py-20 flex flex-col items-center justify-center space-y-6 text-center">
         <div className="bg-expense/10 p-4 rounded-full">
@@ -86,7 +91,7 @@ export default function GastosPage() {
           </p>
         </div>
         <button
-          onClick={() => window.location.reload()}
+          onClick={() => fetchExpenses()}
           className="bg-action text-white px-6 py-2 rounded-xl font-bold"
         >
           {translate("common.retry")}
@@ -111,6 +116,7 @@ export default function GastosPage() {
         </div>
         <motion.button
           whileHover="hover"
+          onClick={() => setIsModalOpen(true)}
           className="group flex items-center gap-2 bg-action hover:bg-action/90 text-white px-6 py-3 rounded-xl font-bold transition-all shadow-md hover:shadow-lg active:scale-95"
         >
           <motion.div
@@ -128,6 +134,18 @@ export default function GastosPage() {
           {translate("expenses.register")}
         </motion.button>
       </header>
+
+      <RegisterExpenseModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSuccess={fetchExpenses}
+      />
+
+      <ExpenseDetailsSheet
+        isOpen={isDetailsOpen}
+        onClose={() => setIsDetailsOpen(false)}
+        expense={selectedExpense}
+      />
 
       <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
         <KPICard
@@ -169,7 +187,11 @@ export default function GastosPage() {
             {expenses.map((expense) => (
               <TableRow
                 key={expense.id}
-                className="hover:bg-secondary/20 dark:hover:bg-secondary/5 transition-colors border-border-ui h-20"
+                onClick={() => {
+                  setSelectedExpense(expense);
+                  setIsDetailsOpen(true);
+                }}
+                className="hover:bg-secondary/20 dark:hover:bg-secondary/5 transition-colors border-border-ui h-20 cursor-pointer active:scale-[0.99] transition-all"
               >
                 <TableCell className="px-4 md:px-6 py-4 text-sm text-titles dark:text-foreground whitespace-nowrap font-medium">
                   <div className="flex flex-col">

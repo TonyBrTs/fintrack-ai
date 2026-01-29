@@ -7,6 +7,54 @@ import (
 	"time"
 )
 
+var expenses = []models.Expense{
+	{
+		ID:            "1",
+		Amount:        45.5,
+		Currency:      "USD",
+		Description:   "Almuerzo de negocios",
+		Category:      "Alimentación",
+		Date:          time.Now().AddDate(0, 0, -1),
+		PaymentMethod: "Tarjeta de Crédito",
+	},
+	{
+		ID:            "2",
+		Amount:        12.0,
+		Currency:      "USD",
+		Description:   "Uber al aeropuerto",
+		Category:      "Transporte",
+		Date:          time.Now().AddDate(0, 0, -2),
+		PaymentMethod: "Efectivo",
+	},
+	{
+		ID:            "3",
+		Amount:        85.0,
+		Currency:      "USD",
+		Description:   "Suscripción Netflix y Spotify",
+		Category:      "Entretenimiento",
+		Date:          time.Now().AddDate(0, 0, -3),
+		PaymentMethod: "Débito",
+	},
+	{
+		ID:            "4",
+		Amount:        120.0,
+		Currency:      "USD",
+		Description:   "Pago de luz y agua",
+		Category:      "Servicios",
+		Date:          time.Now().AddDate(0, 0, -5),
+		PaymentMethod: "Transferencia",
+	},
+	{
+		ID:            "5",
+		Amount:        30.0,
+		Currency:      "USD",
+		Description:   "Farmacia",
+		Category:      "Salud",
+		Date:          time.Now().AddDate(0, 0, -6),
+		PaymentMethod: "Tarjeta de Crédito",
+	},
+}
+
 func main() {
 	r := gin.Default()
 
@@ -29,56 +77,25 @@ func main() {
 	})
 
 	r.GET("/api/expenses", func(c *gin.Context) {
-		expenses := []models.Expense{
-			{
-				ID:            "1",
-				Amount:        45.5,
-				Currency:      "USD",
-				Description:   "Almuerzo de negocios",
-				Category:      "Alimentación",
-				Date:          time.Now().AddDate(0, 0, -1),
-				PaymentMethod: "Tarjeta de Crédito",
-			},
-			{
-				ID:            "2",
-				Amount:        12.0,
-				Currency:      "USD",
-				Description:   "Uber al aeropuerto",
-				Category:      "Transporte",
-				Date:          time.Now().AddDate(0, 0, -2),
-				PaymentMethod: "Efectivo",
-			},
-			{
-				ID:            "3",
-				Amount:        85.0,
-				Currency:      "USD",
-				Description:   "Suscripción Netflix y Spotify",
-				Category:      "Entretenimiento",
-				Date:          time.Now().AddDate(0, 0, -3),
-				PaymentMethod: "Débito",
-			},
-			{
-				ID:            "4",
-				Amount:        120.0,
-				Currency:      "USD",
-				Description:   "Pago de luz y agua",
-				Category:      "Servicios",
-				Date:          time.Now().AddDate(0, 0, -5),
-				PaymentMethod: "Transferencia",
-			},
-			{
-				ID:            "5",
-				Amount:        30.0,
-				Currency:      "USD",
-				Description:   "Farmacia",
-				Category:      "Salud",
-				Date:          time.Now().AddDate(0, 0, -6),
-				PaymentMethod: "Tarjeta de Crédito",
-			},
-		}
-
 		c.JSON(http.StatusOK, expenses)
 	})
 
-	r.Run(":8080")
+	r.POST("/api/expenses", func(c *gin.Context) {
+		var newExpense models.Expense
+		if err := c.ShouldBindJSON(&newExpense); err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		// Basic validation/defaults
+		newExpense.ID = time.Now().Format("20060102150405")
+		if newExpense.Date.IsZero() {
+			newExpense.Date = time.Now()
+		}
+
+		expenses = append([]models.Expense{newExpense}, expenses...) // Prepend for UI freshness
+		c.JSON(http.StatusCreated, newExpense)
+	})
+
+	r.Run("0.0.0.0:8080")
 }

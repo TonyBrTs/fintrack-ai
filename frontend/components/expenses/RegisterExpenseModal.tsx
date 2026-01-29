@@ -1,0 +1,271 @@
+"use client";
+
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { useSettings } from "@/contexts/SettingsContext";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+interface RegisterExpenseModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
+export function RegisterExpenseModal({
+  isOpen,
+  onClose,
+  onSuccess,
+}: RegisterExpenseModalProps) {
+  const { translate, currency, currencySymbol } = useSettings();
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({
+    amount: "",
+    category: "Alimentación",
+    description: "",
+    date: new Date().toISOString().split("T")[0],
+    payment_method: "Tarjeta de Crédito",
+  });
+
+  const categories = [
+    "Alimentación",
+    "Transporte",
+    "Servicios",
+    "Entretenimiento",
+    "Salud",
+    "Otros",
+  ];
+
+  const paymentMethods = [
+    "Tarjeta de Crédito",
+    "Tarjeta de Débito",
+    "Efectivo",
+    "Transferencia",
+  ];
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/expenses", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          amount: parseFloat(formData.amount),
+          currency,
+          date: new Date(formData.date).toISOString(),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to register expense");
+      }
+
+      toast.success(translate("expenses.form.success"));
+      onSuccess();
+      onClose();
+      // Reset form
+      setFormData({
+        amount: "",
+        category: "Alimentación",
+        description: "",
+        date: new Date().toISOString().split("T")[0],
+        payment_method: "Tarjeta de Crédito",
+      });
+    } catch (error) {
+      console.error("Error registering expense:", error);
+      toast.error(translate("expenses.form.error"));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-106.25">
+        <DialogHeader>
+          <DialogTitle>{translate("expenses.form.title")}</DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit} className="space-y-6 pt-4">
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-titles dark:text-foreground">
+              {translate("expenses.form.amount")}
+            </label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-lg font-bold text-gray-400 z-10">
+                {currencySymbol}
+              </span>
+              <Input
+                required
+                type="number"
+                step="0.01"
+                value={formData.amount}
+                onChange={(e) =>
+                  setFormData({ ...formData, amount: e.target.value })
+                }
+                placeholder="0.00"
+                className="pl-8 text-lg font-bold h-12"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-titles dark:text-foreground">
+                {translate("expenses.form.category")}
+              </label>
+              <Select
+                value={formData.category}
+                onValueChange={(value) =>
+                  setFormData({ ...formData, category: value })
+                }
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Seleccionar categoría" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((cat) => (
+                    <SelectItem key={cat} value={cat}>
+                      {cat}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-bold text-titles dark:text-foreground">
+                {translate("expenses.form.date")}
+              </label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-full h-10 px-3 justify-start text-left font-normal",
+                      !formData.date && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {formData.date ? (
+                      format(new Date(formData.date), "PPP")
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={
+                      formData.date
+                        ? new Date(formData.date + "T12:00:00")
+                        : undefined
+                    }
+                    onSelect={(date) => {
+                      if (date) {
+                        setFormData({
+                          ...formData,
+                          date: format(date, "yyyy-MM-dd"),
+                        });
+                      }
+                    }}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-titles dark:text-foreground">
+              {translate("expenses.form.paymentMethod")}
+            </label>
+            <Select
+              value={formData.payment_method}
+              onValueChange={(value) =>
+                setFormData({ ...formData, payment_method: value })
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Seleccionar método" />
+              </SelectTrigger>
+              <SelectContent>
+                {paymentMethods.map((pm) => (
+                  <SelectItem key={pm} value={pm}>
+                    {pm}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-bold text-titles dark:text-foreground">
+              {translate("expenses.form.description")}
+            </label>
+            <Textarea
+              required
+              value={formData.description}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
+              placeholder="..."
+              className="min-h-24 resize-none"
+            />
+          </div>
+
+          <DialogFooter className="gap-3 sm:gap-0">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={onClose}
+              className="font-medium"
+            >
+              {translate("expenses.form.cancel")}
+            </Button>
+            <Button
+              disabled={loading}
+              type="submit"
+              className="bg-action hover:bg-action/90 font-bold text-white shadow-md active:scale-95 transition-all"
+            >
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+              {loading
+                ? translate("expenses.form.loading")
+                : translate("expenses.form.save")}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}

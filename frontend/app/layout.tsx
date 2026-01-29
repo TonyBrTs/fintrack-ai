@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   description: "Your intelligent financial tracker",
 };
 
+import { Toaster } from "@/components/ui/sonner";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -45,6 +47,7 @@ export default function RootLayout({
             <main className="w-full max-w-360 mx-auto px-4 md:px-10 lg:px-20 pb-24 md:pb-0">
               {children}
             </main>
+            <Toaster position="bottom-right" richColors />
           </SettingsProvider>
         </ThemeProvider>
       </body>

@@ -6,6 +6,7 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useSettings } from "@/contexts/SettingsContext";
 import { Sheet } from "@/components/ui/Sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -120,9 +121,12 @@ export function Header() {
         </button>
 
         {/* Avatar (Desktop Only) */}
-        <div className="w-10 h-10 rounded-full bg-action items-center justify-center font-medium text-sm cursor-pointer text-white hidden md:flex">
-          TA
-        </div>
+        <Avatar size="lg" className="cursor-pointer hidden md:flex">
+          <AvatarImage src="https://github.com/shadcn.png" alt="TonyBrTs" />
+          <AvatarFallback className="bg-action text-white font-medium text-sm">
+            TA
+          </AvatarFallback>
+        </Avatar>
       </div>
 
       {/* Mobile Menu Sheet */}
@@ -134,9 +138,12 @@ export function Header() {
         <div className="flex flex-col gap-8">
           {/* User Profile Section */}
           <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-2xl">
-            <div className="w-12 h-12 rounded-full bg-action flex items-center justify-center font-bold text-white shadow-lg shadow-action/20">
-              TA
-            </div>
+            <Avatar size="lg" className="shadow-lg shadow-action/20">
+              <AvatarImage src="https://github.com/shadcn.png" alt="TonyBrTs" />
+              <AvatarFallback className="bg-action text-white font-bold">
+                TA
+              </AvatarFallback>
+            </Avatar>
             <div className="flex flex-col">
               <span className="text-titles dark:text-foreground font-bold">
                 TonyBrTs
