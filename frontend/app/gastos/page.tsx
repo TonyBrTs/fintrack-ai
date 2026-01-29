@@ -42,7 +42,9 @@ export default function GastosPage() {
   const fetchExpenses = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:8080/api/expenses");
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/expenses`,
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch expenses");

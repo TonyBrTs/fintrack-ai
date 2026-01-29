@@ -93,8 +93,8 @@ export function EditExpenseModal({
 
     try {
       const url = expense
-        ? `http://localhost:8080/api/expenses/${expense.id}`
-        : "http://localhost:8080/api/expenses";
+        ? `${process.env.NEXT_PUBLIC_API_URL}/api/expenses/${expense.id}`
+        : `${process.env.NEXT_PUBLIC_API_URL}/api/expenses`;
       const method = expense ? "PUT" : "POST";
 
       const response = await fetch(url, {

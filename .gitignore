@@ -34,9 +34,11 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files
-.env*
-frontend/.env*
+.env*.local
+frontend/.env*.local
 backend/.env*
+!.env.example
+!frontend/.env.example
 
 # typescript
 *.tsbuildinfo

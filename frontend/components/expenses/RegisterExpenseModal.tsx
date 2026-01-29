@@ -73,18 +73,21 @@ export function RegisterExpenseModal({
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8080/api/expenses", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/expenses`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...formData,
+            amount: parseFloat(formData.amount),
+            currency,
+            date: new Date(formData.date).toISOString(),
+          }),
         },
-        body: JSON.stringify({
-          ...formData,
-          amount: parseFloat(formData.amount),
-          currency,
-          date: new Date(formData.date).toISOString(),
-        }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Failed to register expense");
